@@ -117,7 +117,7 @@ namespace WebApplication1
                     {
                         chiamata += "Parametri not LIKE '%" + parola + "%'";
                     }
-                    i++;
+                    i++; 
                 }
             }
 
