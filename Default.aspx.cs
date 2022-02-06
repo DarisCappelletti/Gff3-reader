@@ -35,15 +35,15 @@ namespace WebApplication1
             //Create a DataTable.
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[9] {
-        new DataColumn("1", typeof(string)),
-        new DataColumn("2", typeof(string)),
-        new DataColumn("3", typeof(string)),
-        new DataColumn("4", typeof(string)),
-        new DataColumn("5", typeof(string)),
-        new DataColumn("6", typeof(string)),
-        new DataColumn("7", typeof(string)),
-        new DataColumn("8", typeof(string)),
-        new DataColumn("Parametri",typeof(string)) });
+            new DataColumn("1", typeof(string)),
+            new DataColumn("2", typeof(string)),
+            new DataColumn("3", typeof(string)),
+            new DataColumn("4", typeof(string)),
+            new DataColumn("5", typeof(string)),
+            new DataColumn("6", typeof(string)),
+            new DataColumn("7", typeof(string)),
+            new DataColumn("8", typeof(string)),
+            new DataColumn("Parametri",typeof(string)) });
 
             //Read the contents of CSV file.
             //string csvData = File.ReadAllText(csvPath);
@@ -117,7 +117,7 @@ namespace WebApplication1
                     {
                         chiamata += "Parametri not LIKE '%" + parola + "%'";
                     }
-                    i++; 
+                    i++;
                 }
             }
 
