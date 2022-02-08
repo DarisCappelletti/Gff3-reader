@@ -80,8 +80,8 @@
                             <div class="input-group mb-3">
                                 <input type="text"
                                     class="ele-contiene-edit form-control"
-                                    placeholder="Aggiungi voce elenco"
-                                    aria-label="Aggiungi voce elenco"
+                                    placeholder="Parola da ricercare"
+                                    aria-label="Parola da ricercare"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <button class="ele-contiene-add btn btn-success"
@@ -106,8 +106,8 @@
                             <div class="input-group mb-3">
                                 <input type="text"
                                     class="ele-noncontiene-edit form-control"
-                                    placeholder="Aggiungi voce elenco"
-                                    aria-label="Aggiungi voce elenco"
+                                    placeholder="Parola da rimuovere"
+                                    aria-label="Parola da rimuovere"
                                     aria-describedby="basic-addon2">
                                 <div class="input-group-append">
                                     <button class="ele-noncontiene-add btn btn-success"
