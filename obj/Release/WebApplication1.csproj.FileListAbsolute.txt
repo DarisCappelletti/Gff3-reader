@@ -48,7 +48,6 @@ C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\roslyn\vbc.rsp
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\roslyn\VBCSCompiler.exe
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\roslyn\VBCSCompiler.exe.config
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\Antlr3.Runtime.dll
-C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\AspNet.ScriptManager.bootstrap.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\AspNet.ScriptManager.jQuery.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\Microsoft.AspNet.FriendlyUrls.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\Microsoft.AspNet.Web.Optimization.WebForms.dll
