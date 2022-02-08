@@ -35,15 +35,15 @@ namespace WebApplication1
             //Create a DataTable.
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[9] {
-            new DataColumn("1", typeof(string)),
-            new DataColumn("2", typeof(string)),
-            new DataColumn("3", typeof(string)),
-            new DataColumn("4", typeof(string)),
-            new DataColumn("5", typeof(string)),
-            new DataColumn("6", typeof(string)),
-            new DataColumn("7", typeof(string)),
-            new DataColumn("8", typeof(string)),
-            new DataColumn("Parametri",typeof(string)) });
+            new DataColumn("Sequid", typeof(string)),
+            new DataColumn("Source", typeof(string)),
+            new DataColumn("Type", typeof(string)),
+            new DataColumn("Start", typeof(string)),
+            new DataColumn("End", typeof(string)),
+            new DataColumn("Score", typeof(string)),
+            new DataColumn("Strand", typeof(string)),
+            new DataColumn("Phase", typeof(string)),
+            new DataColumn("Attributes",typeof(string)) });
 
             //Read the contents of CSV file.
             //string csvData = File.ReadAllText(csvPath);
@@ -72,61 +72,75 @@ namespace WebApplication1
             GridView1.DataSource = dt;
             GridView1.DataBind();
 
-            stato.Text = "Ci sono " + GridView1.Rows.Count + " risultati.";
+            stato.Text = "Ci sono <strong>" + GridView1.Rows.Count + "</strong> risultati.";
         }
 
         public void btnSearch_Click(object sender, EventArgs e)
         {
+            var contiene = valoriContiene.Value;
+            var noncontiene = valoriNonContiene.Value;
             string chiamata = "";
             DataTable dati = Session["data"] as DataTable;
-            //(prova as DataTable).DefaultView.RowFilter = string.Format("Parametri = '{0}'", txtRicerca.Text);
-            if (txtContiene.Text.Trim() != "")
+            //(prova as DataTable).DefaultView.RowFilter = string.Format("Attributes = '{0}'", txtRicerca.Text);
+            if (contiene != "")
             {
-                var listaParole = txtContiene.Text.Split(',');
+                var listaParole = contiene.Split(';');
                 int conteggioParole = listaParole.Count();
                 int i = 0;
                 foreach (var parola in listaParole)
                 {
                     if (i != conteggioParole && i != 0)
                     {
-                        chiamata += " and Parametri LIKE '%" + parola + "%'";
+                        chiamata += " and Attributes LIKE '%" + parola + "%'";
                     }
                     else
                     {
-                        chiamata += "Parametri LIKE '%" + parola + "%'";
+                        chiamata += "Attributes LIKE '%" + parola + "%'";
                     }
                     i++;
                 }
             }
-            if (txtNonContiene.Text.Trim() != "")
+            if (noncontiene.Trim() != "")
             {
                 if (chiamata != "")
                 {
                     chiamata += " and ";
                 }
-                var listaParole = txtNonContiene.Text.Split(',');
+                var listaParole = noncontiene.Split(';');
                 int conteggioParole = listaParole.Count();
                 int i = 0;
                 foreach (var parola in listaParole)
                 {
                     if (i != conteggioParole && i != 0)
                     {
-                        chiamata += " and Parametri not LIKE '%" + parola + "%'";
+                        chiamata += " and Attributes not LIKE '%" + parola + "%'";
                     }
                     else
                     {
-                        chiamata += "Parametri not LIKE '%" + parola + "%'";
+                        chiamata += "Attributes not LIKE '%" + parola + "%'";
                     }
                     i++;
                 }
             }
 
-            (dati as DataTable).DefaultView.RowFilter = chiamata;
+            if (dati != null)
+            {
+                (dati as DataTable).DefaultView.RowFilter = chiamata;
 
-            GridView1.DataSource = dati;
-            GridView1.DataBind();
+                GridView1.DataSource = dati;
+                GridView1.DataBind();
 
-            stato.Text = "Ci sono " + GridView1.Rows.Count + " risultati.";
+                stato.Text = "Ci sono <strong>" + GridView1.Rows.Count + "</strong> risultati.";
+
+                messaggio.Text = "";
+            }
+            else
+            {
+                messaggio.Text = "<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">" +
+                    "<strong>Se non selezioni un file non posso mostrarti nulla :)</strong>" +
+                    "<button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>" +
+                    "</div>";
+            }
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -146,6 +160,6 @@ namespace WebApplication1
         public string Numero3 { get; set; }
         public string Vuoto1 { get; set; }
         public string Vuoto2 { get; set; }
-        public string Parametri { get; set; }
+        public string Attributes { get; set; }
     }
 }

@@ -13,6 +13,24 @@ namespace WebApplication1 {
     public partial class _Default {
         
         /// <summary>
+        /// messaggio control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal messaggio;
+        
+        /// <summary>
+        /// panRicerca control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panRicerca;
+        
+        /// <summary>
         /// lblFile control.
         /// </summary>
         /// <remarks>
@@ -49,13 +67,13 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.Label lblFiltro;
         
         /// <summary>
-        /// txtContiene control.
+        /// valoriContiene control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtContiene;
+        protected global::System.Web.UI.WebControls.HiddenField valoriContiene;
         
         /// <summary>
         /// lblNonContiene control.
@@ -67,13 +85,13 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.Label lblNonContiene;
         
         /// <summary>
-        /// txtNonContiene control.
+        /// valoriNonContiene control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNonContiene;
+        protected global::System.Web.UI.WebControls.HiddenField valoriNonContiene;
         
         /// <summary>
         /// btnRicerca control.
