@@ -8,7 +8,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server" CssClass="container-lg">
     <%--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">--%>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<%--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--%>
     <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -39,7 +39,7 @@
             padding: 15px;
         }
 
-        .ele-contiene-list button {
+        /*.ele-contiene-list button {
             float: right;
             margin: 2px;
         }
@@ -47,6 +47,33 @@
         .ele-noncontiene-list button {
             float: right;
             margin: 2px;
+        }*/
+
+        .ele-contiene-list .list-group-item, .ele-noncontiene-list .list-group-item {
+            clear: both;
+            padding: 0;
+        }
+
+            .ele-contiene-list .list-group-item span, .ele-noncontiene-list .list-group-item span {
+                display: inline-block;
+                padding: 8px;
+            }
+
+        .ele-contiene-list button, .ele-noncontiene-list button {
+            float: right;
+            margin: 2px;
+        }
+
+        .ele-contiene .input-group input[type="text"], .ele-noncontiene .input-group input[type="text"] {
+            width: 1%;
+            padding: 0.375rem 0.75rem;
+            margin: 0;
+            border-right: 0;
+        }
+
+        .ele-contiene .input-group button, .ele-noncontiene .input-group button {
+            margin: 0;
+            padding: 0.375rem 0.75rem;
         }
     </style>
     <div class="container-fluid">
