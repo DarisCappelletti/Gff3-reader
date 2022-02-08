@@ -8,13 +8,17 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server" CssClass="container-lg">
     <%--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">--%>
-<%--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--%>
+    <%--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">--%>
     <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        .container {
+            margin-top: 20px;
+        }
+
         td {
             min-width: 70px;
         }
@@ -75,14 +79,19 @@
             margin: 0;
             padding: 0.375rem 0.75rem;
         }
+
+        .StickyHeader th {
+            position: sticky;
+            top: 60px;
+            background-color: #14989d;
+        }
     </style>
-    <div class="container-fluid">
+
+    <div class="container">
         <asp:Literal ID="messaggio" runat="server"></asp:Literal>
         <div>
-            <h2>Programma molto figo / Gff3 reader</h2>
-            <p>
-                Proviamo a cercare qualche micro-tizio insieme!
-            </p>
+            <h2>Gff3 reader</h2>
+            <p>Tool per lo studio di file in formato .gff3</p>
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
                 <div class="row">
                     <div class="col-md-2">
@@ -93,7 +102,13 @@
                         <p>Selezionare un file in formato .gff3 e cliccare sul pulsante carica</p>
                     </div>
                     <div class="col-md-6">
-                        <asp:Button ID="btnCarica" runat="server" Text="Carica file" CssClass="btn btn-secondary" OnClick="ImportCSV" />
+                        <asp:Button 
+                            ID="btnCarica" 
+                            runat="server" 
+                            Text="Carica file" 
+                            CssClass="btn btn-secondary" 
+                            OnClick="ImportCSV" 
+                            OnClientClick="showLoading();" />
                     </div>
                 </div>
 
@@ -149,14 +164,21 @@
                         </div>
                     </div>
                 </div>
-                <p>*Inserire la parola da ricercare/escludere e cliccare sul pulsante "Aggiungi". 
+                <p>
+                    *Inserire la parola da ricercare/escludere e cliccare sul pulsante "Aggiungi". 
                     (esempio: scrivo la parola "pippo" e clicco su aggiungi, poi scrivo "paperino" e clicco su aggiungi.
                     Per eliminare una parola cliccare sul pulsante rosso che apparirà.
                     Infine cliccare su "Applica i filtri" per filtrare la lista.
 
                 </p>
 
-                <asp:Button ID="btnRicerca" runat="server" CssClass="btn btn-primary" Text="Applica i filtri" OnClick="btnSearch_Click" />
+                <asp:Button 
+                    ID="btnRicerca" 
+                    runat="server" 
+                    CssClass="btn btn-primary" 
+                    Text="Applica i filtri" 
+                    OnClick="btnSearch_Click" 
+                    OnClientClick="showLoading();"/>
             </asp:Panel>
 
         </div>
@@ -168,6 +190,7 @@
             AlternatingRowStyle-CssClass="alt"
             Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
             Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
+            <HeaderStyle CssClass="StickyHeader" />
         </asp:GridView>
     </div>
 
