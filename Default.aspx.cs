@@ -12,12 +12,41 @@ namespace WebApplication1
 {
     public partial class _Default : Page
     {
-        GridView gdv = null;
-        string csvPath = "";
-
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Page.IsPostBack)
+            {
+                DataTable dati = Session["data"] as DataTable;
+                if (dati != null)
+                {
+                    if (Session["contiene"] != null)
+                    {
+                        valoriContiene.Value = Session["contiene"].ToString();
+                    }
+                    if (Session["noncontiene"] != null)
+                    {
+                        valoriNonContiene.Value = Session["noncontiene"].ToString();
+                    }
+                    creaBioColonne();
+                    aggiornaTabella(dati);
+                }
+                visualizzaFileCaricato();
+            }
+        }
 
+        public void creaBioColonne()
+        {
+            var bioColonne = new BioQualcosa();
+            bioColonne.Sequid = true;
+            bioColonne.Source = true;
+            bioColonne.Type = true;
+            bioColonne.Start = true;
+            bioColonne.End = true;
+            bioColonne.Score = true;
+            bioColonne.Strand = true;
+            bioColonne.Phase = true;
+            bioColonne.Attributes = true;
+            Session["bioColonne"] = bioColonne;
         }
 
         protected void ImportCSV(object sender, EventArgs e)
@@ -26,11 +55,15 @@ namespace WebApplication1
             //csvPath = Server.MapPath("~/UploadFiles/") + Path.GetFileName(fileCaricato.PostedFile.FileName);
             //fileCaricato.SaveAs(csvPath);
 
+            creaBioColonne();
+            
             string csvPath;
             using (StreamReader inputStreamReader = new StreamReader(fileCaricato.PostedFile.InputStream))
             {
                 csvPath = inputStreamReader.ReadToEnd();
             }
+
+            Session["nomeFile"] = fileCaricato.PostedFile.FileName;
 
             //Create a DataTable.
             DataTable dt = new DataTable();
@@ -44,7 +77,7 @@ namespace WebApplication1
             new DataColumn("Strand", typeof(string)),
             new DataColumn("Phase", typeof(string)),
             new DataColumn("Attributes",typeof(string)) });
-
+            
             //Read the contents of CSV file.
             //string csvData = File.ReadAllText(csvPath);
             csvPath = csvPath.Replace("##gff-version 3\n", "");
@@ -69,10 +102,8 @@ namespace WebApplication1
             Session["data"] = dt;
 
             //Bind the DataTable.
-            GridView1.DataSource = dt;
-            GridView1.DataBind();
-
-            stato.Text = "Ci sono <strong>" + GridView1.Rows.Count + "</strong> risultati.";
+            aggiornaTabella(dt);
+            visualizzaFileCaricato();
         }
 
         public void btnSearch_Click(object sender, EventArgs e)
@@ -80,10 +111,11 @@ namespace WebApplication1
             var contiene = valoriContiene.Value;
             var noncontiene = valoriNonContiene.Value;
             string chiamata = "";
-            DataTable dati = Session["data"] as DataTable;
+            
             //(prova as DataTable).DefaultView.RowFilter = string.Format("Attributes = '{0}'", txtRicerca.Text);
             if (contiene != "")
             {
+                Session["contiene"] = contiene;
                 var listaParole = contiene.Split(';');
                 int conteggioParole = listaParole.Count();
                 int i = 0;
@@ -102,6 +134,7 @@ namespace WebApplication1
             }
             if (noncontiene.Trim() != "")
             {
+                Session["noncontiene"] = noncontiene;
                 if (chiamata != "")
                 {
                     chiamata += " and ";
@@ -123,16 +156,12 @@ namespace WebApplication1
                 }
             }
 
+            DataTable dati = Session["data"] as DataTable;
             if (dati != null)
             {
                 (dati as DataTable).DefaultView.RowFilter = chiamata;
 
-                GridView1.DataSource = dati;
-                GridView1.DataBind();
-
-                stato.Text = "Ci sono <strong>" + GridView1.Rows.Count + "</strong> risultati.";
-
-                messaggio.Text = "";
+                aggiornaTabella(dati);
             }
             else
             {
@@ -145,21 +174,155 @@ namespace WebApplication1
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            e.Row.Cells[6].Visible = false;
-            e.Row.Cells[7].Visible = false;
+            BioQualcosa bioColonne = Session["bioColonne"] as BioQualcosa;
+            if (bioColonne != null)
+            {
+                if (bioColonne.Sequid == true) { e.Row.Cells[0].Visible = true; } else { e.Row.Cells[0].Visible = false; }
+                if (bioColonne.Source == true) { e.Row.Cells[1].Visible = true; } else { e.Row.Cells[1].Visible = false; }
+                if (bioColonne.Type == true) { e.Row.Cells[2].Visible = true; } else { e.Row.Cells[2].Visible = false; }
+                if (bioColonne.Start == true) { e.Row.Cells[3].Visible = true; } else { e.Row.Cells[3].Visible = false; }
+                if (bioColonne.End == true) { e.Row.Cells[4].Visible = true; } else { e.Row.Cells[4].Visible = false; }
+                if (bioColonne.Score == true) { e.Row.Cells[5].Visible = true; } else { e.Row.Cells[5].Visible = false; }
+                if (bioColonne.Strand == true) { e.Row.Cells[6].Visible = true; } else { e.Row.Cells[6].Visible = false; }
+                if (bioColonne.Phase == true) { e.Row.Cells[7].Visible = true; } else { e.Row.Cells[7].Visible = false; }
+                if (bioColonne.Attributes == true) { e.Row.Cells[8].Visible = true; } else { e.Row.Cells[8].Visible = false; }
+            }
+    }
+        public void aggiornaTabella(DataTable dati)
+        {
+            if (dati != null)
+            {
+                GridView1.DataSource = dati;
+                GridView1.DataBind();
+
+                stato.Text = "Ci sono <strong>" + GridView1.Rows.Count + "</strong> risultati.";
+
+                messaggio.Text = "";
+                pulsantiColonne.Visible = true;
+            }
+            else
+            {
+                pulsantiColonne.Visible = false;
+            }
+        }
+
+        public override void VerifyRenderingInServerForm(Control control)
+        {
+            /* Verifies that the control is rendered */
+        }
+
+        public void visualizzaFileCaricato()
+        {
+            if (Session["nomeFile"] != null)
+            {
+                litFileCaricato.Visible = true;
+                litFileCaricato.Text = "<strong>File attivo:</strong> " + Session["nomeFile"].ToString();
+            }
+            else
+            {
+                litFileCaricato.Text = "";
+                litFileCaricato.Visible = false;
+            }
+        }
+
+        protected void btnEsportaExcel_Click(object sender, EventArgs e)
+        {
+            ExportGridToExcel();
+        }
+
+        private void ExportGridToExcel()
+        {
+            Response.Clear();
+            Response.Buffer = true;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Charset = "";
+            string FileName = "Vithal" + DateTime.Now + ".xls";
+            StringWriter strwritter = new StringWriter();
+            HtmlTextWriter htmltextwrtter = new HtmlTextWriter(strwritter);
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
+            GridView1.GridLines = GridLines.Both;
+            GridView1.HeaderStyle.Font.Bold = true;
+            GridView1.RenderControl(htmltextwrtter);
+            Response.Write(strwritter.ToString());
+            Response.End();
+        }
+
+        public void mostraNascondiColonne(object sender, EventArgs e)
+        {
+            Button button = (Button)sender;
+            DataTable dati = Session["data"] as DataTable;
+            BioQualcosa bioColonne = Session["bioColonne"] as BioQualcosa;
+            if (button.CommandName == "1")
+            {
+                bioColonne.Sequid = bioColonne.Sequid == true ? bioColonne.Sequid = false : bioColonne.Sequid = true;
+                aggiornaBottoni(button, bioColonne.Sequid);
+            }
+            else if (button.CommandName == "2")
+            {
+                bioColonne.Source = bioColonne.Source == true ? bioColonne.Source = false : bioColonne.Source = true;
+                aggiornaBottoni(button, bioColonne.Source);
+            }
+            else if (button.CommandName == "3")
+            {
+                bioColonne.Type = bioColonne.Type == true ? bioColonne.Type = false : bioColonne.Type = true;
+                aggiornaBottoni(button, bioColonne.Type);
+            }
+            else if (button.CommandName == "4")
+            {
+                bioColonne.Start = bioColonne.Start == true ? bioColonne.Start = false : bioColonne.Start = true;
+                aggiornaBottoni(button, bioColonne.Start);
+            }
+            else if (button.CommandName == "5")
+            {
+                bioColonne.End = bioColonne.End == true ? bioColonne.End = false : bioColonne.End = true;
+                aggiornaBottoni(button, bioColonne.End);
+            }
+            else if (button.CommandName == "6")
+            {
+                bioColonne.Score = bioColonne.Score == true ? bioColonne.Score = false : bioColonne.Score = true;
+                aggiornaBottoni(button, bioColonne.Score);
+            }
+            else if (button.CommandName == "7")
+            {
+                bioColonne.Strand = bioColonne.Strand == true ? bioColonne.Strand = false : bioColonne.Strand = true;
+                aggiornaBottoni(button, bioColonne.Strand);
+            }
+            else if (button.CommandName == "8")
+            {
+                bioColonne.Phase = bioColonne.Phase == true ? bioColonne.Phase = false : bioColonne.Phase = true;
+                aggiornaBottoni(button, bioColonne.Phase);
+            }
+            else if (button.CommandName == "9")
+            {
+                bioColonne.Attributes = bioColonne.Attributes == true ? bioColonne.Attributes = false : bioColonne.Attributes = true;
+                aggiornaBottoni(button, bioColonne.Attributes);
+            }
+
+            Session["bioColonne"] = bioColonne;
+
+            //Bind the DataTable.
+            aggiornaTabella(dati);
+        }
+
+        public void aggiornaBottoni(Button button, bool attivo)
+        {
+            button.CssClass = attivo ? "btn btn-danger" : "btn btn-success";
         }
     }
-
+    
     public class BioQualcosa
     {
-        public string Nome { get; set; }
-        public string Nome2 { get; set; }
-        public string Nome3 { get; set; }
-        public string Numero1 { get; set; }
-        public string Numero2 { get; set; }
-        public string Numero3 { get; set; }
-        public string Vuoto1 { get; set; }
-        public string Vuoto2 { get; set; }
-        public string Attributes { get; set; }
+        public bool Sequid { get; set; }
+        public bool Source { get; set; }
+        public bool Type { get; set; }
+        public bool Start { get; set; }
+        public bool End { get; set; }
+        public bool Score { get; set; }
+        public bool Strand { get; set; }
+        public bool Phase { get; set; }
+        public bool Attributes { get; set; }
     }
 }

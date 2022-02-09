@@ -4,6 +4,7 @@
     MasterPageFile="~/Site.Master"
     AutoEventWireup="true"
     CodeBehind="Default.aspx.cs"
+    MaintainScrollPositionOnPostback="true"
     Inherits="WebApplication1._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server" CssClass="container-lg">
@@ -85,6 +86,10 @@
             top: 60px;
             background-color: #14989d;
         }
+
+        #btnCarica {
+            margin-top: 10px;
+        }
     </style>
 
     <div class="container">
@@ -95,20 +100,23 @@
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
                 <div class="row">
                     <div class="col-md-2">
-                        <asp:Label ID="lblFile" runat="server"><strong>Scegli il file:</strong></asp:Label>
+                        <asp:Label ID="lblFile" runat="server"><strong>File:</strong></asp:Label>
                     </div>
                     <div class="col-md-4">
                         <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" />
+                        <asp:Button
+                            ID="btnCarica"
+                            runat="server"
+                            ClientIDMode="Static"
+                            Text="Carica file"
+                            CssClass="btn btn-secondary"
+                            OnClick="ImportCSV"
+                            OnClientClick="showLoading();" />
                         <p>Selezionare un file in formato .gff3 e cliccare sul pulsante carica</p>
                     </div>
                     <div class="col-md-6">
-                        <asp:Button 
-                            ID="btnCarica" 
-                            runat="server" 
-                            Text="Carica file" 
-                            CssClass="btn btn-secondary" 
-                            OnClick="ImportCSV" 
-                            OnClientClick="showLoading();" />
+
+                        <asp:Literal ID="litFileCaricato" runat="server" Visible="false"></asp:Literal>
                     </div>
                 </div>
 
@@ -172,19 +180,45 @@
 
                 </p>
 
-                <asp:Button 
-                    ID="btnRicerca" 
-                    runat="server" 
-                    CssClass="btn btn-primary" 
-                    Text="Applica i filtri" 
-                    OnClick="btnSearch_Click" 
-                    OnClientClick="showLoading();"/>
+                <asp:Button
+                    ID="btnRicerca"
+                    runat="server"
+                    CssClass="btn btn-primary"
+                    Text="Applica i filtri"
+                    OnClick="btnSearch_Click"
+                    OnClientClick="showLoading();" />
+                <asp:Button
+                    ID="btnEsportaExcel"
+                    runat="server"
+                    CssClass="btn btn-secondary"
+                    Text="Esporta excel"
+                    OnClick="btnEsportaExcel_Click" />
             </asp:Panel>
 
         </div>
 
         <div class="stato">
             <asp:Label ID="stato" runat="server"></asp:Label>
+        </div>
+        <div id="pulsantiColonne" runat="server" visible="false">
+            <div class="row">
+                <div class="col-md-4">
+                    <asp:Label ID="lblPulsantiColonne" runat="server"><strong>Mostra/Nascondi colonne:</strong></asp:Label>
+                </div>
+                <div class="col-md-8">
+                    <asp:Button ID="colonna1" runat="server" CommandName="1" OnClick="mostraNascondiColonne" Text="Sequid" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna2" runat="server" CommandName="2" OnClick="mostraNascondiColonne" Text="Source" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna3" runat="server" CommandName="3" OnClick="mostraNascondiColonne" Text="Type" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna4" runat="server" CommandName="4" OnClick="mostraNascondiColonne" Text="Start" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna5" runat="server" CommandName="5" OnClick="mostraNascondiColonne" Text="End" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna6" runat="server" CommandName="6" OnClick="mostraNascondiColonne" Text="Score" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna7" runat="server" CommandName="7" OnClick="mostraNascondiColonne" Text="Strand" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna8" runat="server" CommandName="8" OnClick="mostraNascondiColonne" Text="Phase" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna9" runat="server" CommandName="9" OnClick="mostraNascondiColonne" Text="Attributes" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                </div>
+            </div>
+
+
         </div>
         <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound"
             AlternatingRowStyle-CssClass="alt"

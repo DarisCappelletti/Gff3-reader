@@ -58,6 +58,15 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.Button btnCarica;
         
         /// <summary>
+        /// litFileCaricato control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litFileCaricato;
+        
+        /// <summary>
         /// lblFiltro control.
         /// </summary>
         /// <remarks>
@@ -103,6 +112,15 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.Button btnRicerca;
         
         /// <summary>
+        /// btnEsportaExcel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnEsportaExcel;
+        
+        /// <summary>
         /// stato control.
         /// </summary>
         /// <remarks>
@@ -110,6 +128,105 @@ namespace WebApplication1 {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label stato;
+        
+        /// <summary>
+        /// pulsantiColonne control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl pulsantiColonne;
+        
+        /// <summary>
+        /// lblPulsantiColonne control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPulsantiColonne;
+        
+        /// <summary>
+        /// colonna1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna1;
+        
+        /// <summary>
+        /// colonna2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna2;
+        
+        /// <summary>
+        /// colonna3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna3;
+        
+        /// <summary>
+        /// colonna4 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna4;
+        
+        /// <summary>
+        /// colonna5 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna5;
+        
+        /// <summary>
+        /// colonna6 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna6;
+        
+        /// <summary>
+        /// colonna7 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna7;
+        
+        /// <summary>
+        /// colonna8 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna8;
+        
+        /// <summary>
+        /// colonna9 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button colonna9;
         
         /// <summary>
         /// GridView1 control.
