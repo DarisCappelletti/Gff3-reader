@@ -67,3 +67,4 @@ C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Release\WebAppl
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Release\WebApplication1.csproj.CopyComplete
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Release\WebApplication1.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Release\WebApplication1.pdb
+C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Release\WebApplication1.csprojAssemblyReference.cache

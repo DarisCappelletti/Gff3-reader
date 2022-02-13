@@ -90,13 +90,36 @@
         #btnCarica {
             margin-top: 10px;
         }
+        .table a{
+            color: white;
+        }
     </style>
 
     <div class="container">
         <asp:Literal ID="messaggio" runat="server"></asp:Literal>
         <div>
             <h2>Gff3 reader</h2>
-            <p>Tool per lo studio di file in formato .gff3</p>
+            <div style="font-size: small;">Tool per lo studio di file in formato .gff3<br />È possibile effettuare le seguenti operazioni: </div>
+            <ul style="font-size: small;">
+                <li>
+                    caricare e visualizzare file in formato .gff3
+                </li>
+                <li>
+                    Filtrare la lista impostando parole da ricercare/escludere
+                </li>
+                <li>
+                    Mostrare/Nascondere le colonne della tabella
+                </li>
+                <li>
+                    Ordinare la tabella in ordine crescente/decrescente
+                </li>
+                <li>
+                    Esportare la tabella in formato excel
+                </li>
+                <li>
+                    Ordinare la tabella in ordine crescente/decrescente (cliccare sul nome della colonna)
+                </li>
+            </ul>
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
                 <div class="row">
                     <div class="col-md-2">
@@ -188,6 +211,12 @@
                     OnClick="btnSearch_Click"
                     OnClientClick="showLoading();" />
                 <asp:Button
+                    ID="btnEliminaFiltri"
+                    runat="server"
+                    CssClass="btn btn-danger"
+                    Text="Elimina filtri"
+                    OnClick="btnEliminaFiltri_Click" />
+                <asp:Button
                     ID="btnEsportaExcel"
                     runat="server"
                     CssClass="btn btn-secondary"
@@ -197,9 +226,12 @@
 
         </div>
 
+        <!-- stato -->
         <div class="stato">
             <asp:Label ID="stato" runat="server"></asp:Label>
         </div>
+
+        <!-- pulsanti tabella -->
         <div id="pulsantiColonne" runat="server" visible="false">
             <div class="row">
                 <div class="col-md-2">
@@ -232,24 +264,30 @@
                 </asp:DropDownList>
                 </div>
             </div>
-
-
         </div>
-        <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound" OnPageIndexChanging="GridView1_PageIndexChanging" 
-            AlternatingRowStyle-CssClass="alt" AllowPaging="true" PageSize="2000" AutoGenerateColumns="false"
+
+        <!-- Tabella -->
+        <asp:GridView 
+            ID="GridView1" 
+            runat="server" 
+            OnRowDataBound="GridView1_RowDataBound" 
+            OnPageIndexChanging="GridView1_PageIndexChanging" AllowPaging="true" PageSize="2000"
+            OnSorting="GridView1_Sorting" AllowSorting="true" CurrentSortDir="ASC" CurrentSortField="sequid"
+            AlternatingRowStyle-CssClass="alt" 
+            AutoGenerateColumns="false"
             Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
             Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
             <HeaderStyle CssClass="StickyHeader" />
             <Columns>
-                <asp:BoundField DataField="Sequid" HeaderText="Sequid" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Source" HeaderText="Source" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Type" HeaderText="Type" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Start" HeaderText="Start" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="End" HeaderText="End" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Score" HeaderText="Score" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Strand" HeaderText="Strand" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Phase" HeaderText="Phase" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
-                <asp:BoundField DataField="Attributes" HeaderText="Attributes" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Sequid" HeaderText="Sequid" ItemStyle-CssClass="short" HeaderStyle-CssClass="short"  SortExpression="sequid"/>
+                <asp:BoundField DataField="Source" HeaderText="Source" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="source" />
+                <asp:BoundField DataField="Type" HeaderText="Type" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="type" />
+                <asp:BoundField DataField="Start" HeaderText="Start" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="start"/>
+                <asp:BoundField DataField="End" HeaderText="End" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="end" />
+                <asp:BoundField DataField="Score" HeaderText="Score" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="score" />
+                <asp:BoundField DataField="Strand" HeaderText="Strand" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="strand" />
+                <asp:BoundField DataField="Phase" HeaderText="Phase" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="phase" />
+                <asp:BoundField DataField="Attributes" HeaderText="Attributes" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="attributes" />
             </Columns>
         </asp:GridView>
     </div>

@@ -230,6 +230,7 @@ namespace WebApplication1
             response.Clear();
             response.Charset = "";
             response.ContentType = "application/vnd.ms-excel";
+            Response.ContentEncoding = Encoding.UTF8;
             Response.AddHeader("Content-Disposition", "attachment;filename=" + FileName);
 
             using (var sw = new StringWriter())
@@ -328,8 +329,107 @@ namespace WebApplication1
                 impostaFiltri();
             }
         }
+
+        private void GridViewSortDirection(GridView g, GridViewSortEventArgs e, out SortDirection d, out string f)
+        {
+            f = e.SortExpression;
+            d = e.SortDirection;
+
+            //Check if GridView control has required Attributes
+            if (g.Attributes["CurrentSortField"] != null && g.Attributes["CurrentSortDir"] != null)
+            {
+                if (f == g.Attributes["CurrentSortField"])
+                {
+                    d = SortDirection.Descending;
+                    if (g.Attributes["CurrentSortDir"] == "ASC")
+                    {
+                        d = SortDirection.Ascending;
+                    }
+                }
+
+                g.Attributes["CurrentSortField"] = f;
+                g.Attributes["CurrentSortDir"] = (d == SortDirection.Ascending ? "DESC" : "ASC");
+                
+                var tabella = Session["data"] as List<BioTizio>;
+                IOrderedEnumerable<BioTizio> tab = null;
+                if (f == "sequid")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Sequid) : tabella.OrderByDescending(x => x.Sequid);
+                }
+                else if (f == "source")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Source) : tabella.OrderByDescending(x => x.Source);
+                }
+                else if (f == "type")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Type) : tabella.OrderByDescending(x => x.Type);
+                }
+                else if (f == "start")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Start) : tabella.OrderByDescending(x => x.Start);
+                }
+                else if (f == "end")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.End) : tabella.OrderByDescending(x => x.End);
+                }
+                else if (f == "score")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Score) : tabella.OrderByDescending(x => x.Score);
+                }
+                else if (f == "strand")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Strand) : tabella.OrderByDescending(x => x.Strand);
+                }
+                else if (f == "phase")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Phase) : tabella.OrderByDescending(x => x.Phase);
+                }
+                else if (f == "attributes")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Attributes) : tabella.OrderByDescending(x => x.Attributes);
+                }
+                aggiornaTabella(tab.ToList());
+            }
+
+        }
+
+        protected void GridView1_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            SortDirection sortDirection = SortDirection.Ascending;
+            string sortField = string.Empty;
+            GridViewSortDirection(GridView1, e, out sortDirection, out sortField);
+        }
+
+        protected void btnEliminaFiltri_Click(object sender, EventArgs e)
+        {
+            // Rimuovo i filtri per parola
+            Session["contiene"] = null;
+            Session["noncontiene"] = null;
+            valoriContiene.Value = null;
+            valoriNonContiene.Value = null;
+
+            // Ripristino la visione delle colonne
+            GridView grid = GridView1 as GridView;
+            for (int i = 0; i < 9; i++)
+            {
+                grid.Columns[i].Visible = true;
+            }
+
+            // imposto i pulsanti del mostra/nascondi colonne come attivi
+            colonna1.CssClass = "btn btn-danger";
+            colonna2.CssClass = "btn btn-danger";
+            colonna3.CssClass = "btn btn-danger";
+            colonna4.CssClass = "btn btn-danger";
+            colonna5.CssClass = "btn btn-danger";
+            colonna6.CssClass = "btn btn-danger";
+            colonna7.CssClass = "btn btn-danger";
+            colonna8.CssClass = "btn btn-danger";
+            colonna9.CssClass = "btn btn-danger";
+
+            impostaFiltri();
+        }
     }
-    
+
     public class BioTizio
     {
         public string Sequid { get; set; }
