@@ -202,7 +202,7 @@
         </div>
         <div id="pulsantiColonne" runat="server" visible="false">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-2">
                     <asp:Label ID="lblPulsantiColonne" runat="server"><strong>Mostra/Nascondi colonne:</strong></asp:Label>
                 </div>
                 <div class="col-md-8">
@@ -216,15 +216,41 @@
                     <asp:Button ID="colonna8" runat="server" CommandName="8" OnClick="mostraNascondiColonne" Text="Phase" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
                     <asp:Button ID="colonna9" runat="server" CommandName="9" OnClick="mostraNascondiColonne" Text="Attributes" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
                 </div>
+                <div class="col-md-2">
+                    Risultati:
+                    <asp:DropDownList 
+                        ID="ddlNumeroPagine" 
+                        runat="server" 
+                        AutoPostBack="true"
+                        OnSelectedIndexChanged="ddlNumeroRisultati_SelectedIndexChanged">
+                    <asp:ListItem Value="100">100</asp:ListItem>
+                    <asp:ListItem Value="500">500</asp:ListItem>
+                    <asp:ListItem Value="1000">1000</asp:ListItem>
+                    <asp:ListItem Value="2000" Selected="True">2000</asp:ListItem>
+                    <asp:ListItem Value="4000">4000</asp:ListItem>
+                    <asp:ListItem Value="all">Tutti</asp:ListItem>
+                </asp:DropDownList>
+                </div>
             </div>
 
 
         </div>
-        <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound"  
-            AlternatingRowStyle-CssClass="alt"
+        <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound" OnPageIndexChanging="GridView1_PageIndexChanging" 
+            AlternatingRowStyle-CssClass="alt" AllowPaging="true" PageSize="2000" AutoGenerateColumns="false"
             Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
             Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
             <HeaderStyle CssClass="StickyHeader" />
+            <Columns>
+                <asp:BoundField DataField="Sequid" HeaderText="Sequid" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Source" HeaderText="Source" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Type" HeaderText="Type" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Start" HeaderText="Start" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="End" HeaderText="End" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Score" HeaderText="Score" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Strand" HeaderText="Strand" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Phase" HeaderText="Phase" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+                <asp:BoundField DataField="Attributes" HeaderText="Attributes" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" />
+            </Columns>
         </asp:GridView>
     </div>
 
