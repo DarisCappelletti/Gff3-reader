@@ -220,7 +220,7 @@
 
 
         </div>
-        <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound"
+        <asp:GridView ID="GridView1" runat="server" OnRowDataBound="GridView1_RowDataBound"  
             AlternatingRowStyle-CssClass="alt"
             Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
             Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">

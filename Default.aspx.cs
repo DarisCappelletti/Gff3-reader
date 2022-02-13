@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -79,13 +80,12 @@ namespace WebApplication1
             new DataColumn("Attributes",typeof(string)) });
             
             //Read the contents of CSV file.
-            //string csvData = File.ReadAllText(csvPath);
-            csvPath = csvPath.Replace("##gff-version 3\n", "");
 
             //Execute a loop over the rows.
             foreach (string row in csvPath.Split('\n'))
             {
-                if (!string.IsNullOrEmpty(row))
+                // Se la riga non è vuota e non è un commento la aggiungo
+                if (!string.IsNullOrEmpty(row) && !row.StartsWith("#"))
                 {
                     dt.Rows.Add();
                     int i = 0;
@@ -187,7 +187,7 @@ namespace WebApplication1
                 if (bioColonne.Phase == true) { e.Row.Cells[7].Visible = true; } else { e.Row.Cells[7].Visible = false; }
                 if (bioColonne.Attributes == true) { e.Row.Cells[8].Visible = true; } else { e.Row.Cells[8].Visible = false; }
             }
-    }
+        }
         public void aggiornaTabella(DataTable dati)
         {
             if (dati != null)
@@ -312,7 +312,7 @@ namespace WebApplication1
             button.CssClass = attivo ? "btn btn-danger" : "btn btn-success";
         }
     }
-    
+
     public class BioQualcosa
     {
         public bool Sequid { get; set; }
@@ -324,5 +324,18 @@ namespace WebApplication1
         public bool Strand { get; set; }
         public bool Phase { get; set; }
         public bool Attributes { get; set; }
+    }
+
+    public class BioTizio
+    {
+        public string Sequid { get; set; }
+        public string Source { get; set; }
+        public string Type { get; set; }
+        public string Start { get; set; }
+        public string End { get; set; }
+        public string Score { get; set; }
+        public string Strand { get; set; }
+        public string Phase { get; set; }
+        public string Attributes { get; set; }
     }
 }
