@@ -225,7 +225,7 @@ namespace WebApplication1
             GridView1.RowStyle.HorizontalAlign = HorizontalAlign.Left;
             GridView1.RowStyle.VerticalAlign = VerticalAlign.Top;
 
-            string FileName = "Vithal" + DateTime.Now + ".xls";
+            string FileName = "Gff3ToExcel_" + DateTime.Now + ".xls";
             HttpResponse response = HttpContext.Current.Response;
             response.Clear();
             response.Charset = "";

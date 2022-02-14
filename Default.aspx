@@ -4,7 +4,7 @@
     MasterPageFile="~/Site.Master"
     AutoEventWireup="true"
     CodeBehind="Default.aspx.cs"
-    MaintainScrollPositionOnPostback="true"
+    EnableEventValidation="false"
     Inherits="WebApplication1._Default" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server" CssClass="container-lg">
@@ -84,6 +84,10 @@
         .StickyHeader th {
             position: sticky;
             top: 60px;
+            background-color: #14989d;
+        }
+
+        .Footer {
             background-color: #14989d;
         }
 
@@ -278,6 +282,7 @@
             Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
             Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
             <HeaderStyle CssClass="StickyHeader" />
+            <PagerStyle CssClass="Footer" />
             <Columns>
                 <asp:BoundField DataField="Sequid" HeaderText="Sequid" ItemStyle-CssClass="short" HeaderStyle-CssClass="short"  SortExpression="sequid"/>
                 <asp:BoundField DataField="Source" HeaderText="Source" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="source" />
