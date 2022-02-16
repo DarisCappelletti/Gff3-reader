@@ -144,7 +144,7 @@ namespace WebApplication1
                 int conteggioParole = listaParole.Count();
                 foreach (var parola in listaParole)
                 {
-                    query = query.Where(x => x.Attributes.Contains(parola));
+                    query = query.Where(x => x.Attributes.ToLower().Contains(parola.ToLower()));
                 }
             }
             if (noncontiene.Trim() != "")
@@ -154,7 +154,7 @@ namespace WebApplication1
                 var listaParole = noncontiene.Split(';');
                 foreach (var parola in listaParole)
                 {
-                    query = query.Where(x => !x.Attributes.Contains(parola));
+                    query = query.Where(x => !x.Attributes.ToLower().Contains(parola.ToLower()));
                 }
             }
             var listaTizi = query.ToList();
