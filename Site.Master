@@ -55,8 +55,8 @@
                     opacity: 1;
                 }
         </style>
-        <link href="Content/bootstrap.min.css?v=1" rel="stylesheet" />
-        <script src="Scripts/bootstrap.bundle.min.js"></script>
+        <link href="../Content/bootstrap.min.css?v=1" rel="stylesheet" />
+        <script src="../Scripts/bootstrap.bundle.min.js"></script>
 
         <asp:ScriptManager runat="server">
             <Scripts>
