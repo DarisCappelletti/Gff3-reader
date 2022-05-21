@@ -7,11 +7,22 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server" CssClass="container-lg">
     <style>
-        #messaggio{
+        #messaggio {
             position: fixed;
             top: 0;
             right: 0;
             z-index: 999999;
+        }
+
+        .modal:nth-of-type(even) {
+            z-index: 1062 !important;
+        }
+
+        .modal-backdrop.show:nth-of-type(even) {
+            z-index: 1061 !important;
+        }
+        th, td {
+            word-break: normal;
         }
     </style>
     <script
@@ -23,8 +34,10 @@
     <div class="container">
         <div>
             <h2>Ricerca treni</h2>
-            <div style="font-size: small;">Tool per la ricerca di treni<br />
-                È possibile effettuare le seguenti operazioni: </div>
+            <div style="font-size: small;">
+                Tool per la ricerca di treni<br />
+                È possibile effettuare le seguenti operazioni:
+            </div>
             <ul style="font-size: small;">
                 <li>ricercare un treno impostando la stazione di partenza e di destinazione
                 </li>
@@ -60,24 +73,146 @@
             </asp:Panel>
 
             <!-- Tabella -->
-        <asp:GridView 
-            ID="gdvTreni" 
-            runat="server" 
-            AlternatingRowStyle-CssClass="alt" 
-            AutoGenerateColumns="false"
-            Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
-            Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
-            <HeaderStyle CssClass="StickyHeader" />
-            <PagerStyle CssClass="Footer" />
-            <Columns>
-                <asp:BoundField DataField="origin" HeaderText="Stazione partenza" ItemStyle-CssClass="short" HeaderStyle-CssClass="short"  SortExpression="sequid"/>
-                <asp:BoundField DataField="destination" HeaderText="Stazione arrivo" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="source" />
-                <asp:BoundField DataField="DataPartenza" HeaderText="Data partenza" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="type" />
-                <asp:BoundField DataField="DataArrivo" HeaderText="Data arrivo" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="start"/>
-                <asp:BoundField DataField="minprice" HeaderText="Prezzo" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="end" />
-                <asp:BoundField DataField="duration" HeaderText="Durata" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="end" />
-            </Columns>
-        </asp:GridView>
+            <asp:GridView
+                ID="gdvTreni"
+                runat="server"
+                AlternatingRowStyle-CssClass="alt"
+                AutoGenerateColumns="false"
+                Width="100%" border="1" CellPadding="3" CssClass="table table-striped table-bordered table-hover"
+                Style="border: 1px solid #E5E5E5; word-break: break-all; word-wrap: break-word">
+                <HeaderStyle CssClass="StickyHeader" />
+                <PagerStyle CssClass="Footer" />
+                <Columns>
+                    <asp:BoundField DataField="origin" HeaderText="Stazione partenza" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="sequid" />
+                    <asp:BoundField DataField="destination" HeaderText="Stazione arrivo" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="source" />
+                    <asp:BoundField DataField="DataPartenza" HeaderText="Data partenza" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="type" />
+                    <asp:BoundField DataField="DataArrivo" HeaderText="Data arrivo" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="start" />
+                    <asp:BoundField DataField="minprice" HeaderText="Prezzo minimo senza offerte" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="end" />
+                    <asp:BoundField DataField="duration" HeaderText="Durata" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="end" />
+                    <asp:TemplateField>
+                        <ItemTemplate>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target='<%# "#modalDettaglio-" + Eval("idSolution") %>'>
+                                Dettagli
+                            </button>
+                            <div class="modal fade" id='<%# "modalDettaglio-" + Eval("idSolution") %>' tabindex="-1" aria-labelledby="modalDettaglioLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="modalDettaglioLabel">Dettagli soluzione</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" style="width: 145px;">Treno</th>
+                                                        <th scope="col">Partenza</th>
+                                                        <th scope="col">Orario</th>
+                                                        <th scope="col">Arrivo</th>
+                                                        <th scope="col">Orario</th>
+                                                        <th scope="col">Offerta</th>
+                                                        <th scope="col">Prezzo</th>
+                                                        <th scope="col">Descrizione</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <asp:Repeater runat="server" DataSource='<%# Eval("Dettaglio.leglist") %>'>
+                                                        <ItemTemplate>
+                                                            <asp:Repeater
+                                                                ID="RepeaterInner"
+                                                                runat="server"
+                                                                DataSource='<%# Eval("Servicelist") %>'
+                                                                OnItemDataBound="RepeaterInner_ItemDataBound">
+                                                                <ItemTemplate>
+                                                                    <tr>
+                                                                        <td><%# DataBinder.Eval(Container.NamingContainer.NamingContainer, "DataItem.trainidentifier")%></td>
+                                                                        <td><%# DataBinder.Eval(Container.NamingContainer.NamingContainer, "DataItem.departurestation")%></td>
+                                                                        <td><%# DataBinder.Eval(Container.NamingContainer.NamingContainer, "DataItem.departuretime")%></td>
+                                                                        <td><%# DataBinder.Eval(Container.NamingContainer.NamingContainer, "DataItem.arrivalstation")%></td>
+                                                                        <td><%# DataBinder.Eval(Container.NamingContainer.NamingContainer, "DataItem.arrivaltime")%></td>
+                                                                        <td><%# Eval("name") %></td>
+                                                                        <td><%# Eval("minprice") %></td>
+                                                                        <td>
+                                                                            <button
+                                                                                id="btnModalDettagliOfferta"
+                                                                                runat="server"
+                                                                                type="button"
+                                                                                class="btn btn-primary btnModalDettagliOfferta">
+                                                                                Dettagli
+                                                                            </button>
+                                                                            
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td colspan="8">
+                                                                            <div
+                                                                                style="display: none;"
+                                                                                id="modalDettagliOfferta"
+                                                                                runat="server">
+                                                                                <table class="table">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th scope="col" style="min-width: 90px;">Nome</th>
+                                                                                            <th scope="col" style="min-width: 90px;">Prezzo</th>
+                                                                                            <th scope="col" style="min-width: 90px;">Disponibiltà</th>
+                                                                                            <th scope="col" style="min-width: 90px;">Descrizione</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tbody>
+                                                                                        <asp:Repeater runat="server" DataSource='<%# Eval("subservicelist") %>'>
+                                                                                            <ItemTemplate>
+                                                                                                <asp:Repeater runat="server" DataSource='<%# Eval("offerlist") %>'>
+                                                                                                    <ItemTemplate>
+                                                                                                        <tr>
+                                                                                                            <td><%# Eval("name") %></td>
+                                                                                                            <td><%# Eval("price") %></td>
+                                                                                                            <td><%# Eval("available") %></td>
+                                                                                                            <td><%# Eval("description") %></td>
+                                                                                                        </tr>
+                                                                                                    </ItemTemplate>
+                                                                                                </asp:Repeater>
+                                                                                            </ItemTemplate>
+                                                                                        </asp:Repeater>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </ItemTemplate>
+                                                            </asp:Repeater>
+                                                        </ItemTemplate>
+                                                    </asp:Repeater>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Indietro</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+            </asp:GridView>
         </div>
     </div>
+    <script>
+        $(".btnModalDettagliOfferta").click(function () {
+            var div = $(this).attr("data-classe")
+            if ($("." + div).hasClass("active")) {
+                $("." + div).slideUp( "fast", function() {
+                    $(this).css("display", "none");
+                    $(this).removeClass( "active" );
+                });
+            }
+            else {
+                $("." + div).slideDown( "fast", function() {
+                    $(this).css("display", "block");
+                    $(this).addClass( "active" );
+                });
+                
+            }
+        });
+    </script>
 </asp:Content>

@@ -8,11 +8,15 @@ using System.Text.Json;
 using System.Web.Script.Serialization;
 using WebApplication1.Services;
 using System.Text.Json.Serialization;
+using WebApplication1.Models;
+using System.Web.UI.HtmlControls;
 
 namespace WebApplication1.Treni
 {
     public partial class RicercaTreno : System.Web.UI.Page
     {
+        int i = 0;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -30,7 +34,7 @@ namespace WebApplication1.Treni
             ddlStazionePartenza.DataBind();
         }
 
-        public List<Root> ricercoTratta(DateTime giorno)
+        public List<Soluzione> ricercoTratta(DateTime giorno)
         {
             var apiString = "https://www.lefrecce.it/msite/api/solutions?";
 
@@ -53,18 +57,18 @@ namespace WebApplication1.Treni
                 apiString + partenza + arrivo + andataRitorno + dataInizio +
                 time + adulti + bambini + direction + frecce + regionalOnly;
 
-            var root = new List<Root>();
+            var listaSoluzioni = new List<Soluzione>();
             bool ciSonoElementi = true;
             int i = 0;
 
             while (ciSonoElementi)
             {
                 var api = apiFinale + offset + i;
-                var lista = chiamataApi(api);
+                var lista = GetListaSoluzioni(api);
 
                 if (lista.Count > 0)
                 {
-                    root.AddRange(lista);
+                    listaSoluzioni.AddRange(lista);
                     i = i + 5;
                 }
                 else
@@ -74,13 +78,15 @@ namespace WebApplication1.Treni
                 }
             }
 
-            return root;
+            return listaSoluzioni;
         }
 
-        private List<Root> chiamataApi(string api)
+        private List<Soluzione> GetListaSoluzioni(string api)
         {
             // creo la richiesta in get con i parametri
+            CookieContainer cookieContainer = new CookieContainer();
             var request = (HttpWebRequest)WebRequest.Create(api);
+            request.CookieContainer = cookieContainer;
 
             // Imposto un timeout di 3 secondi
             //request.Timeout = 1500;
@@ -94,10 +100,44 @@ namespace WebApplication1.Treni
 
             // Estraggo i dati dal json di risposta
             //var root = JsonSerializer.Deserialize<Root>(streamJson);
-            var root = JsonSerializer.Deserialize<List<Root>>(streamJson);
+            var listaSoluzioni = JsonSerializer.Deserialize<List<Soluzione>>(streamJson);
             //var listeSinonimi = root.response.Select(x => x.list.synonyms).ToList();
+            foreach(var soluzione in listaSoluzioni)
+            {
+                var dettaglio = GetDettaglioSoluzione(cookieContainer, soluzione.idsolution);
+                soluzione.Dettaglio = dettaglio;
+            }
+            return listaSoluzioni;
+        }
 
-            return root;
+        private DettaglioSoluzione.Root GetDettaglioSoluzione(CookieContainer cookieContainer, string idSoluzione)
+        {
+            try
+            {
+                var richiesta = "https://www.lefrecce.it/msite/api/solutions/" + idSoluzione + "/standardoffers";
+                // creo la richiesta in get con i parametri
+                var request = (HttpWebRequest)WebRequest.Create(richiesta);
+                request.CookieContainer = cookieContainer;
+
+                // Imposto un timeout di 3 secondi
+                //request.Timeout = 1500;
+
+                // Effettuo la chiamata GET
+                WebResponse response = request.GetResponse();
+                var stream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(stream);
+                // Leggo la risposta.
+                string streamJson = reader.ReadToEnd();
+
+                // Estraggo i dati dal json di risposta
+                var dettaglioSoluzione = JsonSerializer.Deserialize<DettaglioSoluzione.Root>(streamJson);
+
+                return dettaglioSoluzione;
+            }
+            catch(Exception exc)
+            {
+                return null;
+            }
         }
 
         protected void btnRicercaTreni_Click(object sender, EventArgs e)
@@ -109,9 +149,9 @@ namespace WebApplication1.Treni
             else if (txtDataFine.Text == "")
             {
                 var dataInizio = Convert.ToDateTime(txtDataInizio.Text);
-                var root = ricercoTratta(dataInizio);
+                var soluzione = ricercoTratta(dataInizio);
 
-                gdvTreni.DataSource = root;
+                gdvTreni.DataSource = soluzione;
                 gdvTreni.DataBind();
             }
             else
@@ -119,14 +159,14 @@ namespace WebApplication1.Treni
                 var dataInizio = Convert.ToDateTime(txtDataInizio.Text);
                 var dataFine = Convert.ToDateTime(txtDataFine.Text);
 
-                var root = new List<Root>();
+                var listaSoluzioni = new List<Soluzione>();
                 foreach (DateTime day in EachDay(dataInizio, dataFine))
                 {
                     var lista = ricercoTratta(dataInizio);
-                    root.AddRange(lista);
+                    listaSoluzioni.AddRange(lista);
                 }
 
-                gdvTreni.DataSource = root.OrderBy(x => x.minprice);
+                gdvTreni.DataSource = listaSoluzioni.OrderBy(x => x.minprice);
                 gdvTreni.DataBind();
             }
         }
@@ -152,29 +192,8 @@ namespace WebApplication1.Treni
             dtDateTime = dtDateTime.AddMilliseconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
         }
-
-        public class StazioneJson
-        {
-            public int isF { get; set; }
-            public int FB { get; set; }
-            public int FA { get; set; }
-            public int isE { get; set; }
-        }
-
-        public class RootStazioneJson
-        {
-            public StazioneJson stazione { get; set; }
-        }
-
-        public class Trainlist
-        {
-            public string trainidentifier { get; set; }
-            public string trainacronym { get; set; }
-            public string traintype { get; set; }
-            public string pricetype { get; set; }
-        }
-
-        public class Root
+        
+        public class Soluzione
         {
             public string idsolution { get; set; }
             public string origin { get; set; }
@@ -209,8 +228,30 @@ namespace WebApplication1.Treni
             public object specialOffer { get; set; }
             public List<object> transportMeasureList { get; set; }
             public double originalPrice { get; set; }
-            
+            public DettaglioSoluzione.Root Dettaglio { get; set; }
         }
 
+        public class Trainlist
+        {
+            public string trainidentifier { get; set; }
+            public string trainacronym { get; set; }
+            public string traintype { get; set; }
+            public string pricetype { get; set; }
+        }
+
+        protected void RepeaterInner_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            var Servicelist = (DettaglioSoluzione.Servicelist)e.Item.DataItem;
+            var btnModalDettagliOfferta = (HtmlButton)e.Item.FindControl("btnModalDettagliOfferta");
+            var aModalDettagliOfferta = (HtmlAnchor)e.Item.FindControl("aModalDettagliOfferta");
+            HtmlGenericControl modalDettagliOfferta = e.Item.FindControl("modalDettagliOfferta") as HtmlGenericControl;
+            var lnkAvverti = (LinkButton)e.Item.FindControl("lnkAvverti");
+            var rep = (Repeater)e.Item.FindControl("repRiorganizzatori");
+
+            btnModalDettagliOfferta.Attributes["style"] = Servicelist.subservicelist != null && Servicelist.subservicelist.Count > 0 ? "" : "display: none;";
+            btnModalDettagliOfferta.Attributes["data-classe"] = "modalDettaglioOfferta-" + i;
+            modalDettagliOfferta.Attributes["class"] = "table-responsive modalDettaglioOfferta-" + i;
+            i++;
+        }
     }
 }
