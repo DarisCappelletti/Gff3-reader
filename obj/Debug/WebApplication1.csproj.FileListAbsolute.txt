@@ -67,7 +67,6 @@ C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Debug\WebApplic
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csproj.CopyComplete
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Debug\WebApplication1.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Debug\WebApplication1.pdb
-C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csprojAssemblyReference.cache
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\System.Buffers.dll
 C:\Users\Lavoro\source\repos\WebApplication1\WebApplication1\bin\System.Memory.dll
