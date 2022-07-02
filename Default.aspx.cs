@@ -167,15 +167,15 @@ namespace WebApplication1
                 {
                     query =
                         query.Where(x =>
-                            x.Attributes.ToLower().Contains(parola.ToLower()) ||
-                             x.Sequid.ToLower().Contains(parola.ToLower()) ||
-                              x.Source.ToLower().Contains(parola.ToLower()) ||
-                               x.Type.ToLower().Contains(parola.ToLower()) ||
-                                x.Start.ToLower().Contains(parola.ToLower()) ||
-                                 x.End.ToLower().Contains(parola.ToLower()) ||
-                                 x.Score.ToLower().Contains(parola.ToLower()) ||
-                                 x.Strand.ToLower().Contains(parola.ToLower()) ||
-                                 x.Phase.ToLower().Contains(parola.ToLower())
+                            !x.Attributes.ToLower().Contains(parola.ToLower()) ||
+                             !x.Sequid.ToLower().Contains(parola.ToLower()) ||
+                              !x.Source.ToLower().Contains(parola.ToLower()) ||
+                               !x.Type.ToLower().Contains(parola.ToLower()) ||
+                                !x.Start.ToLower().Contains(parola.ToLower()) ||
+                                 !x.End.ToLower().Contains(parola.ToLower()) ||
+                                 !x.Score.ToLower().Contains(parola.ToLower()) ||
+                                 !x.Strand.ToLower().Contains(parola.ToLower()) ||
+                                 !x.Phase.ToLower().Contains(parola.ToLower())
                             );
                 }
             }
