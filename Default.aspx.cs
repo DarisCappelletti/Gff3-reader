@@ -152,6 +152,8 @@ namespace WebApplication1
             var contiene = valoriContiene.Value;
             var noncontiene = valoriNonContiene.Value;
 
+            var colAttive = impostaColonneRicerca();
+
             IEnumerable<BioTizio> query = dati;
             //(prova as DataTable).DefaultView.RowFilter = string.Format("Attributes = '{0}'", txtRicerca.Text);
             if (contiene != "")
@@ -163,16 +165,16 @@ namespace WebApplication1
                 {
                     query =
                         query.Where(x =>
-                                x.File.ToLower().Contains(parola.ToLower()) ||
-                                x.Attributes.ToLower().Contains(parola.ToLower()) ||
-                                x.Sequid.ToLower().Contains(parola.ToLower()) ||
-                                x.Source.ToLower().Contains(parola.ToLower()) ||
-                                x.Type.ToLower().Contains(parola.ToLower()) ||
-                                x.Start.ToLower().Contains(parola.ToLower()) ||
-                                x.End.ToLower().Contains(parola.ToLower()) ||
-                                x.Score.ToLower().Contains(parola.ToLower()) ||
-                                x.Strand.ToLower().Contains(parola.ToLower()) ||
-                                x.Phase.ToLower().Contains(parola.ToLower())
+                                colAttive.inFile && x.File.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inAttributes && x.Attributes.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inSequid && x.Sequid.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inSource && x.Source.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inType && x.Type.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inStart && x.Start.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inEnd && x.End.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inScore && x.Score.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inStrand && x.Strand.ToLower().Contains(parola.ToLower()) ||
+                                colAttive.inPhase && x.Phase.ToLower().Contains(parola.ToLower())
                             );
                 }
             }
@@ -185,22 +187,74 @@ namespace WebApplication1
                 {
                     query =
                         query.Where(x =>
-                                !x.File.ToLower().Contains(parola.ToLower()) &&
-                                !x.Attributes.ToLower().Contains(parola.ToLower()) &&
-                                !x.Sequid.ToLower().Contains(parola.ToLower()) &&
-                                !x.Source.ToLower().Contains(parola.ToLower()) &&
-                                !x.Type.ToLower().Contains(parola.ToLower()) &&
-                                !x.Start.ToLower().Contains(parola.ToLower()) &&
-                                !x.End.ToLower().Contains(parola.ToLower()) &&
-                                !x.Score.ToLower().Contains(parola.ToLower()) &&
-                                !x.Strand.ToLower().Contains(parola.ToLower()) &&
-                                !x.Phase.ToLower().Contains(parola.ToLower())
+                                (!colAttive.inFile || !x.File.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inAttributes || !x.Attributes.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inSequid || !x.Sequid.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inSource || !x.Source.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inType || !x.Type.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inStart || !x.Start.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inEnd || !x.End.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inScore || !x.Score.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inStrand || !x.Strand.ToLower().Contains(parola.ToLower())) &&
+                                (!colAttive.inPhase || !x.Phase.ToLower().Contains(parola.ToLower()))
                             );
                 }
             }
+            
             var listaTizi = query.ToList();
 
             aggiornaTabella(listaTizi);
+        }
+
+        public InColonne impostaColonneRicerca()
+        {
+            var colAttive = new InColonne();
+
+            foreach (ListItem item in cklColonne.Items)
+            {
+                if(item.Value == "File")
+                {
+                    if (item.Selected) { colAttive.inFile = true; } else { colAttive.inFile = false; }
+                }
+                else if (item.Value == "Sequid")
+                {
+                    if (item.Selected) { colAttive.inSequid = true; } else { colAttive.inSequid = false; }
+                }
+                else if (item.Value == "Source")
+                {
+                    if (item.Selected) { colAttive.inSource = true; } else { colAttive.inSource = false; }
+                }
+                else if (item.Value == "Type")
+                {
+                    if (item.Selected) { colAttive.inType = true; } else { colAttive.inType = false; }
+                }
+                else if (item.Value == "Start")
+                {
+                    if (item.Selected) { colAttive.inStart = true; } else { colAttive.inStart = false; }
+                }
+                else if (item.Value == "End")
+                {
+                    if (item.Selected) { colAttive.inEnd = true; } else { colAttive.inEnd = false; }
+                }
+                else if (item.Value == "Score")
+                {
+                    if (item.Selected) { colAttive.inScore = true; } else { colAttive.inScore = false; }
+                }
+                else if (item.Value == "Strand")
+                {
+                    if (item.Selected) { colAttive.inStrand = true; } else { colAttive.inStrand = false; }
+                }
+                else if (item.Value == "Phase")
+                {
+                    if (item.Selected) { colAttive.inPhase = true; } else { colAttive.inPhase = false; }
+                }
+                else if (item.Value == "Attributes")
+                {
+                    if (item.Selected) { colAttive.inAttributes = true; } else { colAttive.inAttributes = false; }
+                }
+            }
+
+            return colAttive;
         }
 
         protected void GridView1_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -467,9 +521,15 @@ namespace WebApplication1
 
             // Ripristino la visione delle colonne
             GridView grid = GridView1 as GridView;
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 10; i++)
             {
                 grid.Columns[i].Visible = true;
+            }
+
+            // Ripristino le colonne sui filtri
+            foreach(ListItem item in cklColonne.Items)
+            {
+                item.Selected = true;
             }
 
             // imposto i pulsanti del mostra/nascondi colonne come attivi
@@ -499,5 +559,19 @@ namespace WebApplication1
         public string Strand { get; set; }
         public string Phase { get; set; }
         public string Attributes { get; set; }
+    }
+
+    public class InColonne
+    {
+        public bool inFile { get; set; }
+        public bool inSequid { get; set; }
+        public bool inSource { get; set; }
+        public bool inType { get; set; }
+        public bool inStart { get; set; }
+        public bool inEnd { get; set; }
+        public bool inScore { get; set; }
+        public bool inStrand { get; set; }
+        public bool inPhase { get; set; }
+        public bool inAttributes { get; set; }
     }
 }

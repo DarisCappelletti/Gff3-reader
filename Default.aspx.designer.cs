@@ -94,6 +94,15 @@ namespace WebApplication1 {
         protected global::System.Web.UI.WebControls.HiddenField valoriNonContiene;
         
         /// <summary>
+        /// cklColonne control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cklColonne;
+        
+        /// <summary>
         /// btnRicerca control.
         /// </summary>
         /// <remarks>

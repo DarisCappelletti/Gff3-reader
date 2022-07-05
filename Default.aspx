@@ -3,6 +3,7 @@
     Language="C#"
     MasterPageFile="~/Site.Master"
     AutoEventWireup="true"
+    MaintainScrollPositionOnPostback="true"
     CodeBehind="Default.aspx.cs"
     EnableEventValidation="false"
     Inherits="WebApplication1._Default" %>
@@ -97,6 +98,13 @@
             -webkit-box-shadow: 0px 0px 6px 0px #000000; 
             box-shadow: 0px 0px 6px 0px #000000;
         }
+
+        #btn-back-to-top {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          display: none;
+        }
     </style>
 
     <div class="container">
@@ -151,31 +159,31 @@
                     <h5 class="card-title">Filtri</h5>
                     <div class="card-body">
                         <div class="row">
-                    <div class="col-md-2">
-                        <asp:Label ID="lblFiltro" runat="server"><strong>Contiene:</strong></asp:Label>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="ele-contiene" style="">
-                            <div class="ele-contiene-list list-group"></div>
-                            <div class="input-group mb-3">
-                                <input type="text"
-                                    class="ele-contiene-edit form-control"
-                                    placeholder="Parola da ricercare"
-                                    aria-label="Parola da ricercare"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="ele-contiene-add btn btn-success"
-                                        role="button"
-                                        type="button">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                        Aggiungi
-                                    </button>
+                            <div class="col-md-2">
+                                <asp:Label ID="lblFiltro" runat="server"><strong>Contiene:</strong></asp:Label>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="ele-contiene" style="">
+                                    <div class="ele-contiene-list list-group"></div>
+                                    <div class="input-group mb-3">
+                                        <input type="text"
+                                            class="ele-contiene-edit form-control"
+                                            placeholder="Parola da ricercare"
+                                            aria-label="Parola da ricercare"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="ele-contiene-add btn btn-success"
+                                                role="button"
+                                                type="button">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                Aggiungi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <asp:HiddenField ID="valoriContiene" runat="server" ClientIDMode="Static" />
                                 </div>
                             </div>
-                            <asp:HiddenField ID="valoriContiene" runat="server" ClientIDMode="Static" />
                         </div>
-                    </div>
-                </div>
                         <div class="row">
                             <div class="col-md-2">
                                 <asp:Label ID="lblNonContiene" runat="server"><strong>Non contiene:</strong></asp:Label>
@@ -200,6 +208,25 @@
                                     </div>
                                     <asp:HiddenField ID="valoriNonContiene" runat="server" ClientIDMode="Static" />
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <strong>Ricerca in:</strong>
+                            </div>
+                            <div class="col-md-10">
+                                <asp:CheckBoxList ID="cklColonne" runat="server" AutoPostBack="false" RepeatLayout="Table"  RepeatDirection="Horizontal">
+                                    <asp:ListItem Value="File" Selected="True">File</asp:ListItem>
+                                    <asp:ListItem Value="Sequid" Selected="True">Sequid</asp:ListItem>
+                                    <asp:ListItem Value="Source" Selected="True">Source</asp:ListItem>
+                                    <asp:ListItem Value="Type" Selected="True">Type</asp:ListItem>
+                                    <asp:ListItem Value="Start" Selected="True">Start</asp:ListItem>
+                                    <asp:ListItem Value="End" Selected="True">End</asp:ListItem>
+                                    <asp:ListItem Value="Score" Selected="True">Score</asp:ListItem>
+                                    <asp:ListItem Value="Strand" Selected="True">Strand</asp:ListItem>
+                                    <asp:ListItem Value="Phase" Selected="True">Phase</asp:ListItem>
+                                    <asp:ListItem Value="Attributes" Selected="True">Attributes</asp:ListItem>
+                                </asp:CheckBoxList>
                             </div>
                         </div>
                         <p>
@@ -304,6 +331,14 @@
                 <asp:BoundField DataField="Attributes" HeaderText="Attributes" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="attributes" />
             </Columns>
         </asp:GridView>
+
+        <button
+            type="button"
+            class="btn btn-danger btn-floating btn-lg"
+            id="btn-back-to-top"
+            >
+            <i class="fas fa-arrow-up"></i>
+        </button>
     </div>
 
     <!-- Tipo campo Elenco -->
@@ -547,6 +582,35 @@
             return String(string).replace(/[&<>"'`=\/]/g, function (s) {
                 return entityMap[s];
             });
+        }
+    </script>
+
+    <!-- Go on top -->
+    <script>
+        //Get the button
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () {
+          scrollFunction();
+        };
+
+        function scrollFunction() {
+          if (
+            document.body.scrollTop > 20 ||
+            document.documentElement.scrollTop > 20
+          ) {
+            mybutton.style.display = "block";
+          } else {
+            mybutton.style.display = "none";
+          }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
         }
     </script>
 </asp:Content>
