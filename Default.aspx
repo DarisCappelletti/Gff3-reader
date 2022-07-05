@@ -112,32 +112,46 @@
         <div>
             <h1>Gff3 reader</h1>
             <h2>Tool per lo studio di file in formato .gff3</h2>
-            <div style="font-size: small;">È possibile effettuare le seguenti operazioni: </div>
-            <ul style="font-size: small;">
-                <li>
-                    caricare e visualizzare uno o più file in formato .gff3
-                </li>
-                <li>
-                    Filtrare la lista impostando parole da ricercare/escludere
-                </li>
-                <li>
-                    Mostrare/Nascondere le colonne della tabella
-                </li>
-                <li>
-                    Esportare la tabella in formato excel
-                </li>
-                <li>
-                    Ordinare la tabella in ordine crescente/decrescente (cliccare sul nome della colonna)
-                </li>
-                <li>
-                    Impostare il numero di risultati da visualizzare
-                </li>
-            </ul>
+            <div class="accordion mb-3" id="accordionDettagli">
+                <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Funzionalità disponibili
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionDettagli">
+                    <div class="accordion-body">
+                        <div style="font-size: small;">È possibile effettuare le seguenti operazioni: </div>
+                        <ul style="font-size: small;">
+                            <li>
+                                caricare e visualizzare uno o più file in formato .gff3
+                            </li>
+                            <li>
+                                Filtrare la lista impostando parole da ricercare/escludere
+                            </li>
+                            <li>
+                                Mostrare/Nascondere le colonne della tabella
+                            </li>
+                            <li>
+                                Esportare la tabella in formato excel
+                            </li>
+                            <li>
+                                Ordinare la tabella in ordine crescente/decrescente (cliccare sul nome della colonna)
+                            </li>
+                            <li>
+                                Impostare il numero di risultati da visualizzare
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+            
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
                 <div class="card p-3 mb-3">
+                    <h5 class="card-title">File</h5>
+                    <p class="card-text">Seleziona uno o più file in formato .gff3 e clicca sul pulsante carica. I risultati verranno mostrati in un unica tabella.</p>
                     <div class="card-body row">
-                        <h5 class="card-title">File</h5>
-                        <p class="card-text">Seleziona uno o più file in formato .gff3 e clicca sul pulsante carica. I risultati verranno mostrati in un unica tabella.</p>
                         <div class="col-md-5">
                             <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" AllowMultiple="true" />
                             <asp:Button
@@ -157,6 +171,9 @@
 
                 <div class="card p-3">
                     <h5 class="card-title">Filtri</h5>
+                    <p class="card-text">Filtrare i risultati per parole che devono/non devono essere presenti con la possibilità di selezionare su quale colonna/colonne
+                        effettuare la ricerca.
+                    </p>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-2">
