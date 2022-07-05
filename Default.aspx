@@ -44,16 +44,6 @@
             padding: 15px;
         }
 
-        /*.ele-contiene-list button {
-            float: right;
-            margin: 2px;
-        }
-
-        .ele-noncontiene-list button {
-            float: right;
-            margin: 2px;
-        }*/
-
         .ele-contiene-list .list-group-item, .ele-noncontiene-list .list-group-item {
             clear: both;
             padding: 0;
@@ -97,6 +87,16 @@
         .table a{
             color: white;
         }
+
+        .btn-operazioni {
+            max-width: 120px;
+            display: flex;
+        }
+
+        .card {
+            -webkit-box-shadow: 0px 0px 6px 0px #000000; 
+            box-shadow: 0px 0px 6px 0px #000000;
+        }
     </style>
 
     <div class="container">
@@ -126,29 +126,31 @@
                 </li>
             </ul>
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
-                <div class="row">
-                    <div class="col-md-2">
-                        <asp:Label ID="lblFile" runat="server"><strong>File:</strong></asp:Label>
-                    </div>
-                    <div class="col-md-4">
-                        <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" AllowMultiple="true" />
-                        <asp:Button
-                            ID="btnCarica"
-                            runat="server"
-                            ClientIDMode="Static"
-                            Text="Carica file"
-                            CssClass="btn btn-secondary"
-                            OnClick="ImportCSV"
-                            OnClientClick="showLoading();" />
-                        <p>Selezionare un file in formato .gff3 e cliccare sul pulsante carica</p>
-                    </div>
-                    <div class="col-md-6">
-
-                        <asp:Literal ID="litFileCaricato" runat="server" Visible="false"></asp:Literal>
+                <div class="card p-3 mb-3">
+                    <div class="card-body row">
+                        <h5 class="card-title">File</h5>
+                        <p class="card-text">Seleziona uno o più file in formato .gff3 e clicca sul pulsante carica. I risultati verranno mostrati in un unica tabella.</p>
+                        <div class="col-md-5">
+                            <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" AllowMultiple="true" />
+                            <asp:Button
+                                ID="btnCarica"
+                                runat="server"
+                                ClientIDMode="Static"
+                                Text="Carica file"
+                                CssClass="btn btn-secondary"
+                                OnClick="ImportCSV"
+                                OnClientClick="showLoading();" />
+                        </div>
+                        <div class="col-md-7">
+                            <asp:Literal ID="litFileCaricato" runat="server" Visible="false"></asp:Literal>
+                        </div>
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="card p-3">
+                    <h5 class="card-title">Filtri</h5>
+                    <div class="card-body">
+                        <div class="row">
                     <div class="col-md-2">
                         <asp:Label ID="lblFiltro" runat="server"><strong>Contiene:</strong></asp:Label>
                     </div>
@@ -174,59 +176,63 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <asp:Label ID="lblNonContiene" runat="server"><strong>Non contiene:</strong></asp:Label>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="ele-noncontiene">
-                            <div class="ele-noncontiene-list list-group"></div>
-                            <div class="input-group mb-3">
-                                <input type="text"
-                                    class="ele-noncontiene-edit form-control"
-                                    placeholder="Parola da rimuovere"
-                                    aria-label="Parola da rimuovere"
-                                    aria-describedby="basic-addon2">
-                                <div class="input-group-append">
-                                    <button class="ele-noncontiene-add btn btn-success"
-                                        role="button"
-                                        type="button">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>
-                                        Aggiungi
-                                    </button>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <asp:Label ID="lblNonContiene" runat="server"><strong>Non contiene:</strong></asp:Label>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="ele-noncontiene">
+                                    <div class="ele-noncontiene-list list-group"></div>
+                                    <div class="input-group mb-3">
+                                        <input type="text"
+                                            class="ele-noncontiene-edit form-control"
+                                            placeholder="Parola da rimuovere"
+                                            aria-label="Parola da rimuovere"
+                                            aria-describedby="basic-addon2">
+                                        <div class="input-group-append">
+                                            <button class="ele-noncontiene-add btn btn-success"
+                                                role="button"
+                                                type="button">
+                                                <i class="fa fa-plus" aria-hidden="true"></i>
+                                                Aggiungi
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <asp:HiddenField ID="valoriNonContiene" runat="server" ClientIDMode="Static" />
                                 </div>
                             </div>
-                            <asp:HiddenField ID="valoriNonContiene" runat="server" ClientIDMode="Static" />
+                        </div>
+                        <p>
+                            *Inserire la parola da ricercare/escludere e cliccare sul pulsante "Aggiungi". 
+                            (esempio: scrivo la parola "pippo" e clicco su aggiungi, poi scrivo "paperino" e clicco su aggiungi.
+                            Per eliminare una parola cliccare sul pulsante rosso che apparirà.
+                            Infine cliccare su "Applica i filtri" per filtrare la lista.
+
+                        </p>
+
+                        <div style="display: inline-flex;">
+                            <asp:Button
+                            ID="btnRicerca"
+                            runat="server"
+                            CssClass="btn btn-primary btn-operazioni"
+                            Text="Applica i filtri"
+                            OnClick="btnSearch_Click"
+                            OnClientClick="showLoading();" />
+                        <asp:Button
+                            ID="btnEliminaFiltri"
+                            runat="server"
+                            CssClass="btn btn-danger btn-operazioni"
+                            Text="Elimina filtri"
+                            OnClick="btnEliminaFiltri_Click" />
+                        <asp:Button
+                            ID="btnEsportaExcel"
+                            runat="server"
+                            CssClass="btn btn-secondary btn-operazioni"
+                            Text="Esporta excel"
+                            OnClick="btnEsportaExcel_Click" />
                         </div>
                     </div>
                 </div>
-                <p>
-                    *Inserire la parola da ricercare/escludere e cliccare sul pulsante "Aggiungi". 
-                    (esempio: scrivo la parola "pippo" e clicco su aggiungi, poi scrivo "paperino" e clicco su aggiungi.
-                    Per eliminare una parola cliccare sul pulsante rosso che apparirà.
-                    Infine cliccare su "Applica i filtri" per filtrare la lista.
-
-                </p>
-
-                <asp:Button
-                    ID="btnRicerca"
-                    runat="server"
-                    CssClass="btn btn-primary"
-                    Text="Applica i filtri"
-                    OnClick="btnSearch_Click"
-                    OnClientClick="showLoading();" />
-                <asp:Button
-                    ID="btnEliminaFiltri"
-                    runat="server"
-                    CssClass="btn btn-danger"
-                    Text="Elimina filtri"
-                    OnClick="btnEliminaFiltri_Click" />
-                <asp:Button
-                    ID="btnEsportaExcel"
-                    runat="server"
-                    CssClass="btn btn-secondary"
-                    Text="Esporta excel"
-                    OnClick="btnEsportaExcel_Click" />
             </asp:Panel>
 
         </div>
