@@ -102,11 +102,12 @@
     <div class="container">
         <asp:Literal ID="messaggio" runat="server"></asp:Literal>
         <div>
-            <h2>Gff3 reader</h2>
-            <div style="font-size: small;">Tool per lo studio di file in formato .gff3<br />È possibile effettuare le seguenti operazioni: </div>
+            <h1>Gff3 reader</h1>
+            <h2>Tool per lo studio di file in formato .gff3</h2>
+            <div style="font-size: small;">È possibile effettuare le seguenti operazioni: </div>
             <ul style="font-size: small;">
                 <li>
-                    caricare e visualizzare file in formato .gff3
+                    caricare e visualizzare uno o più file in formato .gff3
                 </li>
                 <li>
                     Filtrare la lista impostando parole da ricercare/escludere
@@ -115,13 +116,13 @@
                     Mostrare/Nascondere le colonne della tabella
                 </li>
                 <li>
-                    Ordinare la tabella in ordine crescente/decrescente
-                </li>
-                <li>
                     Esportare la tabella in formato excel
                 </li>
                 <li>
                     Ordinare la tabella in ordine crescente/decrescente (cliccare sul nome della colonna)
+                </li>
+                <li>
+                    Impostare il numero di risultati da visualizzare
                 </li>
             </ul>
             <asp:Panel ID="panRicerca" runat="server" DefaultButton="btnRicerca">
@@ -130,7 +131,7 @@
                         <asp:Label ID="lblFile" runat="server"><strong>File:</strong></asp:Label>
                     </div>
                     <div class="col-md-4">
-                        <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" />
+                        <asp:FileUpload ID="fileCaricato" runat="server" CssClass="form-control" AllowMultiple="true" />
                         <asp:Button
                             ID="btnCarica"
                             runat="server"
@@ -242,15 +243,16 @@
                     <asp:Label ID="lblPulsantiColonne" runat="server"><strong>Mostra/Nascondi colonne:</strong></asp:Label>
                 </div>
                 <div class="col-md-8">
-                    <asp:Button ID="colonna1" runat="server" CommandName="1" OnClick="mostraNascondiColonne" Text="Sequid" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna2" runat="server" CommandName="2" OnClick="mostraNascondiColonne" Text="Source" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna3" runat="server" CommandName="3" OnClick="mostraNascondiColonne" Text="Type" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna4" runat="server" CommandName="4" OnClick="mostraNascondiColonne" Text="Start" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna5" runat="server" CommandName="5" OnClick="mostraNascondiColonne" Text="End" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna6" runat="server" CommandName="6" OnClick="mostraNascondiColonne" Text="Score" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna7" runat="server" CommandName="7" OnClick="mostraNascondiColonne" Text="Strand" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna8" runat="server" CommandName="8" OnClick="mostraNascondiColonne" Text="Phase" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
-                    <asp:Button ID="colonna9" runat="server" CommandName="9" OnClick="mostraNascondiColonne" Text="Attributes" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna0" runat="server" CommandName="1" OnClick="mostraNascondiColonne" Text="File" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna1" runat="server" CommandName="2" OnClick="mostraNascondiColonne" Text="Sequid" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna2" runat="server" CommandName="3" OnClick="mostraNascondiColonne" Text="Source" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna3" runat="server" CommandName="4" OnClick="mostraNascondiColonne" Text="Type" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna4" runat="server" CommandName="5" OnClick="mostraNascondiColonne" Text="Start" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna5" runat="server" CommandName="6" OnClick="mostraNascondiColonne" Text="End" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna6" runat="server" CommandName="7" OnClick="mostraNascondiColonne" Text="Score" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna7" runat="server" CommandName="8" OnClick="mostraNascondiColonne" Text="Strand" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna8" runat="server" CommandName="9" OnClick="mostraNascondiColonne" Text="Phase" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
+                    <asp:Button ID="colonna9" runat="server" CommandName="10" OnClick="mostraNascondiColonne" Text="Attributes" CssClass="btn btn-danger" OnClientClick="showLoading();"/>
                 </div>
                 <div class="col-md-2">
                     Risultati:
@@ -284,6 +286,7 @@
             <HeaderStyle CssClass="StickyHeader" />
             <PagerStyle CssClass="Footer" />
             <Columns>
+                <asp:BoundField DataField="File" HeaderText="File" SortExpression="file"/>
                 <asp:BoundField DataField="Sequid" HeaderText="Sequid" ItemStyle-CssClass="short" HeaderStyle-CssClass="short"  SortExpression="sequid"/>
                 <asp:BoundField DataField="Source" HeaderText="Source" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="source" />
                 <asp:BoundField DataField="Type" HeaderText="Type" ItemStyle-CssClass="short" HeaderStyle-CssClass="short" SortExpression="type" />

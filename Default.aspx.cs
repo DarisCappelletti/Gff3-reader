@@ -35,20 +35,13 @@ namespace WebApplication1
                 visualizzaFileCaricato();
             }
         }
-        
+
         protected void ImportCSV(object sender, EventArgs e)
         {
-            string csvPath;
-            using (StreamReader inputStreamReader = new StreamReader(fileCaricato.PostedFile.InputStream))
-            {
-                csvPath = inputStreamReader.ReadToEnd();
-            }
-
-            Session["nomeFile"] = fileCaricato.PostedFile.FileName;
-
             //Create a DataTable.
             DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[9] {
+            dt.Columns.AddRange(new DataColumn[10] {
+            new DataColumn("File", typeof(string)),
             new DataColumn("Sequid", typeof(string)),
             new DataColumn("Source", typeof(string)),
             new DataColumn("Type", typeof(string)),
@@ -60,62 +53,86 @@ namespace WebApplication1
             new DataColumn("Attributes",typeof(string)) });
 
             var listaTizi = new List<BioTizio>();
-            
+
             //Read the contents of CSV file.
 
-            //Execute a loop over the rows.
-            foreach (string row in csvPath.Split('\n'))
-            {
-                // Se la riga non è vuota e non è un commento la aggiungo
-                if (!string.IsNullOrEmpty(row) && !row.StartsWith("#"))
-                {
-                    var tizio = new BioTizio();
-                    int i = 0;
-                    //Execute a loop over the columns.
-                    foreach (string cell in row.Split('\t'))
-                    {
-                        if (i == 0)
-                        {
-                            tizio.Sequid = cell;
-                        }
-                        else if (i == 1)
-                        {
-                            tizio.Source = cell;
-                        }
-                        else if (i == 2)
-                        {
-                            tizio.Type = cell;
-                        }
-                        else if (i == 3)
-                        {
-                            tizio.Start = cell;
-                        }
-                        else if (i == 4)
-                        {
-                            tizio.End = cell;
-                        }
-                        else if (i == 5)
-                        {
-                            tizio.Score = cell;
-                        }
-                        else if (i == 6)
-                        {
-                            tizio.Strand = cell;
-                        }
-                        else if (i == 7)
-                        {
-                            tizio.Phase = cell;
-                        }
-                        else if (i == 8)
-                        {
-                            tizio.Attributes = cell;
-                        }
-                        i++;
-                    }
+            //string csvPath;
+            //using (StreamReader inputStreamReader = new StreamReader(fileCaricato.PostedFile.InputStream))
+            //{
+            //    csvPath = inputStreamReader.ReadToEnd();
+            //}
 
-                    listaTizi.Add(tizio);
+            var listaFile = new List<string>();
+
+            if (fileCaricato.HasFiles)
+            {
+                foreach (HttpPostedFile uploadedFile in fileCaricato.PostedFiles)
+                {
+                    listaFile.Add(uploadedFile.FileName);
+
+                    StreamReader inputStreamReader = new StreamReader(uploadedFile.InputStream);
+                    string streamFile = inputStreamReader.ReadToEnd();
+
+                    //Execute a loop over the rows.
+                    foreach (string row in streamFile.Split('\n'))
+                    {
+                        // Se la riga non è vuota e non è un commento la aggiungo
+                        if (!string.IsNullOrEmpty(row) && !row.StartsWith("#"))
+                        {
+                            var tizio = new BioTizio();
+
+                            tizio.File = uploadedFile.FileName;
+
+                            int i = 0;
+                            //Execute a loop over the columns.
+                            foreach (string cell in row.Split('\t'))
+                            {
+                                if (i == 0)
+                                {
+                                    tizio.Sequid = cell;
+                                }
+                                else if (i == 1)
+                                {
+                                    tizio.Source = cell;
+                                }
+                                else if (i == 2)
+                                {
+                                    tizio.Type = cell;
+                                }
+                                else if (i == 3)
+                                {
+                                    tizio.Start = cell;
+                                }
+                                else if (i == 4)
+                                {
+                                    tizio.End = cell;
+                                }
+                                else if (i == 5)
+                                {
+                                    tizio.Score = cell;
+                                }
+                                else if (i == 6)
+                                {
+                                    tizio.Strand = cell;
+                                }
+                                else if (i == 7)
+                                {
+                                    tizio.Phase = cell;
+                                }
+                                else if (i == 8)
+                                {
+                                    tizio.Attributes = cell;
+                                }
+                                i++;
+                            }
+
+                            listaTizi.Add(tizio);
+                        }
+                    }
                 }
             }
+
+            Session["nomeFile"] = listaFile;
 
             Session["data"] = listaTizi;
 
@@ -144,17 +161,18 @@ namespace WebApplication1
                 int conteggioParole = listaParole.Count();
                 foreach (var parola in listaParole)
                 {
-                    query = 
-                        query.Where(x => 
-                            x.Attributes.ToLower().Contains(parola.ToLower()) ||
-                             x.Sequid.ToLower().Contains(parola.ToLower()) ||
-                              x.Source.ToLower().Contains(parola.ToLower()) ||
-                               x.Type.ToLower().Contains(parola.ToLower()) ||
+                    query =
+                        query.Where(x =>
+                                x.File.ToLower().Contains(parola.ToLower()) ||
+                                x.Attributes.ToLower().Contains(parola.ToLower()) ||
+                                x.Sequid.ToLower().Contains(parola.ToLower()) ||
+                                x.Source.ToLower().Contains(parola.ToLower()) ||
+                                x.Type.ToLower().Contains(parola.ToLower()) ||
                                 x.Start.ToLower().Contains(parola.ToLower()) ||
-                                 x.End.ToLower().Contains(parola.ToLower()) ||
-                                 x.Score.ToLower().Contains(parola.ToLower()) ||
-                                 x.Strand.ToLower().Contains(parola.ToLower()) ||
-                                 x.Phase.ToLower().Contains(parola.ToLower())
+                                x.End.ToLower().Contains(parola.ToLower()) ||
+                                x.Score.ToLower().Contains(parola.ToLower()) ||
+                                x.Strand.ToLower().Contains(parola.ToLower()) ||
+                                x.Phase.ToLower().Contains(parola.ToLower())
                             );
                 }
             }
@@ -167,15 +185,16 @@ namespace WebApplication1
                 {
                     query =
                         query.Where(x =>
-                            !x.Attributes.ToLower().Contains(parola.ToLower()) ||
-                             !x.Sequid.ToLower().Contains(parola.ToLower()) ||
-                              !x.Source.ToLower().Contains(parola.ToLower()) ||
-                               !x.Type.ToLower().Contains(parola.ToLower()) ||
-                                !x.Start.ToLower().Contains(parola.ToLower()) ||
-                                 !x.End.ToLower().Contains(parola.ToLower()) ||
-                                 !x.Score.ToLower().Contains(parola.ToLower()) ||
-                                 !x.Strand.ToLower().Contains(parola.ToLower()) ||
-                                 !x.Phase.ToLower().Contains(parola.ToLower())
+                                !x.File.ToLower().Contains(parola.ToLower()) &&
+                                !x.Attributes.ToLower().Contains(parola.ToLower()) &&
+                                !x.Sequid.ToLower().Contains(parola.ToLower()) &&
+                                !x.Source.ToLower().Contains(parola.ToLower()) &&
+                                !x.Type.ToLower().Contains(parola.ToLower()) &&
+                                !x.Start.ToLower().Contains(parola.ToLower()) &&
+                                !x.End.ToLower().Contains(parola.ToLower()) &&
+                                !x.Score.ToLower().Contains(parola.ToLower()) &&
+                                !x.Strand.ToLower().Contains(parola.ToLower()) &&
+                                !x.Phase.ToLower().Contains(parola.ToLower())
                             );
                 }
             }
@@ -216,8 +235,15 @@ namespace WebApplication1
         {
             if (Session["nomeFile"] != null)
             {
+                var files = Session["nomeFile"] as List<string>;
                 litFileCaricato.Visible = true;
-                litFileCaricato.Text = "<strong>File attivo:</strong> " + Session["nomeFile"].ToString();
+
+                litFileCaricato.Text = "";
+
+                foreach (var file in files)
+                {
+                    litFileCaricato.Text += "<strong>File attivo:</strong> " + file + "<br>";
+                }
             }
             else
             {
@@ -319,6 +345,11 @@ namespace WebApplication1
                 grid.Columns[8].Visible = grid.Columns[8].Visible == true ? false : true;
                 aggiornaBottoni(button, grid.Columns[8].Visible);
             }
+            else if (button.CommandName == "10")
+            {
+                grid.Columns[9].Visible = grid.Columns[9].Visible == true ? false : true;
+                aggiornaBottoni(button, grid.Columns[9].Visible);
+            }
 
             //Bind the DataTable.
             impostaFiltri();
@@ -374,7 +405,11 @@ namespace WebApplication1
                 
                 var tabella = Session["data"] as List<BioTizio>;
                 IOrderedEnumerable<BioTizio> tab = null;
-                if (f == "sequid")
+                if (f == "file")
+                {
+                    tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.File) : tabella.OrderByDescending(x => x.File);
+                }
+                else if (f == "sequid")
                 {
                     tab = d == SortDirection.Ascending ? tabella.OrderBy(x => x.Sequid) : tabella.OrderByDescending(x => x.Sequid);
                 }
@@ -454,6 +489,7 @@ namespace WebApplication1
 
     public class BioTizio
     {
+        public string File { get; set; }
         public string Sequid { get; set; }
         public string Source { get; set; }
         public string Type { get; set; }
